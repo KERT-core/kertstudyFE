@@ -3,12 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { changeField, initializeForm } from "../../modules/auth";
 import AuthForm from "../../components/auth/AuthForm";
 
-const LoginForm = () => {
+const RegisterForm = () => {
   const dispatch = useDispatch();
-  const { form } = useSelector(({ auth: { login } }) => ({
-    form: login,
+  const { form } = useSelector(({ auth: { register } }) => ({
+    form: register,
   }));
 
+  console.log(form);
   // 인풋을 변경했을 때 반응하는 핸들러
   const onChange = (e) => {
     const {
@@ -17,7 +18,7 @@ const LoginForm = () => {
 
     dispatch(
       changeField({
-        form: "login",
+        form: "register",
         key: name,
         value,
       })
@@ -31,12 +32,12 @@ const LoginForm = () => {
 
   // 컴포넌트가 처음 렌더링될 떄 form을 초기화 하는 작업이 있어야 함.
   useEffect(() => {
-    dispatch(initializeForm("login"));
+    dispatch(initializeForm("register"));
   }, [dispatch]);
 
   return (
     <AuthForm
-      type="login"
+      type="register"
       onChange={onChange}
       onSubmit={onSubmit}
       form={form}
@@ -44,4 +45,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default RegisterForm;
