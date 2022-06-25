@@ -95,7 +95,7 @@ const StudyCheckerTable = styled.table`
   border: 1px solid black;
   border-collapse: collapse;
   width: 90%;
-  margin: auto;
+  margin: 20px auto;
 
   td {
     border: 1px solid black;
@@ -160,10 +160,10 @@ const PostViewer = ({
     publishedDate,
     creator: { username, _id: creatorId, email },
     tags,
-    // likeId: { like_user },
+    likeId: { like_user: like_user_onlyId },
     _id: postId,
+    capacity,
   } = post;
-
   if (user) {
     var { _id: userId } = user;
   }
@@ -178,22 +178,12 @@ const PostViewer = ({
 
   const data = (
     <StudyCheckerTable>
-      <tr className="info">
-        <td>username</td>
-        <td>email</td>
-      </tr>
-      <tr className="host">
-        <td>
-          {user && username && user.username === username && (
-            <ArrowForwardIcon fontSize="12" />
-          )}
-          {username}
-        </td>
-        <td>{email}</td>
-      </tr>
-
-      {like_user.map(({ username, email }) => (
-        <tr key={username}>
+      <tbody>
+        <tr className="info">
+          <td>username</td>
+          <td>email</td>
+        </tr>
+        <tr className="host">
           <td>
             {user && username && user.username === username && (
               <ArrowForwardIcon fontSize="12" />
@@ -202,10 +192,23 @@ const PostViewer = ({
           </td>
           <td>{email}</td>
         </tr>
-      ))}
+
+        {like_user.map(({ username, email }) => (
+          <tr key={username}>
+            <td>
+              {user &&
+                username &&
+                user.username === username && (
+                  <ArrowForwardIcon fontSize="12" />
+                )}
+              {username}
+            </td>
+            <td>{email}</td>
+          </tr>
+        ))}
+      </tbody>
     </StudyCheckerTable>
   );
-
   return (
     <>
       <CheckStudyModal
@@ -225,7 +228,7 @@ const PostViewer = ({
                 <StarItemIcon
                   style={{ color: palette.cyan[6] }}
                 />
-              ) : !like_user.includes(userId) ? (
+              ) : !like_user_onlyId.includes(userId) ? (
                 <HeartItemIcon
                   style={{ color: palette.gray[5] }}
                 />
@@ -270,17 +273,7 @@ const PostViewer = ({
               >
                 스터디 장
               </AttendanceButton>
-            ) : !like_user.includes(userId) ? (
-              <AttendanceButton
-                cyan
-                onClick={() => {
-                  onStudyIn({ postId, userId });
-                  alert("변경되었습니다.");
-                }}
-              >
-                스터디 참여
-              </AttendanceButton>
-            ) : (
+            ) : like_user_onlyId.includes(userId) ? (
               <AttendanceButton
                 cyan
                 onClick={() => {
@@ -289,6 +282,24 @@ const PostViewer = ({
                 }}
               >
                 스터디 탈퇴
+              </AttendanceButton>
+            ) : like_user_onlyId.length >= +capacity ? (
+              <AttendanceButton
+                cyan
+                disabled
+                style={{ width: "200px" }}
+              >
+                스터디가 꽉 찼습니다.
+              </AttendanceButton>
+            ) : (
+              <AttendanceButton
+                cyan
+                onClick={() => {
+                  onStudyIn({ postId, userId });
+                  alert("변경되었습니다.");
+                }}
+              >
+                스터디 참여
               </AttendanceButton>
             )
           ) : null}
