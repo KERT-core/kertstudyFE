@@ -29,6 +29,15 @@ const buttonStyle = css`
     `}
 
   ${(props) =>
+    props.yellow &&
+    css`
+      background: #f5d922;
+      &:hover {
+        background: #f5cb22;
+      }
+    `}
+
+  ${(props) =>
     props.fullWidth &&
     css`
       padding: 0.5rem 0rem;

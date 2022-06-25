@@ -19,3 +19,97 @@
 // all >> 제너레이터 함수를 배열의 형태로 인자로 넣으면, 제너레이터 함수들이 병행적으로 실행됩니다.
 // 그리고 전부 resolve될 때까지 기다립니다. Promise.all과 비슷합니다.
 // yield.all([testSaga1(), testSaga2()]) >> testSaga1()과 testSaga2()가 동시에 실행되고, 모두 resolve될 때까지 기다립니다.
+
+import { createAction, handleActions } from "redux-actions";
+import createRequestSaga, {
+  createRequestActionTypes,
+} from "../lib/createRequestSaga";
+import { takeLatest, call } from "redux-saga/effects";
+import * as authAPI from "../lib/api/auth";
+
+const TEMP_SET_USER = "user/TEMP_SET_USER";
+// profile리덕스에 있는 값으로 user의 값을 바꿔주어야 한다.
+const SYNC_WITH_PROFILE = "user/SYNC_WITH_PROFILE";
+// 회원 정보 확인
+const [CHECK, CHECK_SUCCESS, CHECK_FAILURE] =
+  createRequestActionTypes("user/CHECK");
+
+const LOGOUT = "user/LOGOUT";
+
+export const syncProfile = createAction(
+  SYNC_WITH_PROFILE,
+  (info) => info
+);
+export const tempSetUser = createAction(
+  TEMP_SET_USER,
+  (user) => user
+);
+export const check = createAction(CHECK);
+export const logout = createAction(LOGOUT);
+
+const checkSaga = createRequestSaga(CHECK, authAPI.check);
+function checkFailureSaga() {
+  try {
+    localStorage.removeItem("user");
+  } catch (e) {
+    console.log("localStorage is not working");
+  }
+}
+// 여기에서는 logoutAPI를 불러서 cookie를 없애고
+// localStorage에 있는 user의 값을 삭제해야 한다.
+function* logoutSaga() {
+  try {
+    yield call(authAPI.logout);
+    localStorage.removeItem("user");
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export function* userSaga() {
+  yield takeLatest(CHECK, checkSaga);
+  yield takeLatest(CHECK_FAILURE, checkFailureSaga);
+  yield takeLatest(LOGOUT, logoutSaga);
+}
+
+const initialState = {
+  user: null,
+  checkError: null,
+};
+
+const user = handleActions(
+  {
+    [TEMP_SET_USER]: (state, { payload: user }) => ({
+      ...state,
+      user,
+    }),
+    [CHECK_SUCCESS]: (state, { payload: user }) => ({
+      ...state,
+      user,
+      checkError: null,
+    }),
+    [CHECK_FAILURE]: (state, { payload: error }) => ({
+      ...state,
+      user: null,
+      checkError: error,
+    }),
+    [LOGOUT]: (state) => ({
+      ...state,
+      user: null,
+    }),
+    [SYNC_WITH_PROFILE]: (
+      state,
+      { payload: { email, username } }
+    ) => ({
+      ...state,
+      user: {
+        ...state.user,
+        email,
+        username,
+      },
+    }),
+  },
+  initialState
+);
+
+export default user;

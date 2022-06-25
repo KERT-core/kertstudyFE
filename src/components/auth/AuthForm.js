@@ -10,9 +10,20 @@ import HttpsIcon from "@mui/icons-material/Https";
 import Button from "../common/Button";
 
 /**
- * 회원가입과 로그인 폼을 보여주는 컴포넌트 입니다.
+ * 에러를 보여주기 위한 컴포넌트 입니다.
  */
 
+const ErrorMessage = styled.div`
+  color: red;
+  text-align: center;
+  font-size: 0.6124rem;
+  margin-top: 0.3rem;
+  font-weight: 700;
+`;
+
+/**
+ * 회원가입과 로그인 폼을 보여주는 컴포넌트 입니다.
+ */
 const AuthFormContainer = styled.div``;
 
 const StyledInput = styled.input.attrs((props) => ({}))`
@@ -122,7 +133,7 @@ const textDictionary = {
   register: "register",
 };
 
-const AuthForm = ({ type, form, onChange, onSubmit }) => {
+const AuthForm = ({ type, form, onChange, onSubmit, error }) => {
   const typeofText = textDictionary[type];
 
   return (
@@ -169,7 +180,7 @@ const AuthForm = ({ type, form, onChange, onSubmit }) => {
             />
           )}
         </div>
-
+        {error && <ErrorMessage>*{error}*</ErrorMessage>}
         <ButtonMarginTop cyan fullWidth>
           {typeofText}
         </ButtonMarginTop>
