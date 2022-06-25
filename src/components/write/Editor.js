@@ -105,7 +105,6 @@ const EditorContent = ({ placeholder, body, onChangeField }) => {
             imageCompression.getDataUrlFromFile(compressedFile);
           promise.then((result) => {
             file = result;
-            console.log("result >> ", result);
           });
         } catch (error) {
           console.log(error);
@@ -115,10 +114,9 @@ const EditorContent = ({ placeholder, body, onChangeField }) => {
         formData.append("image", file);
         const editor = quillInstance.current;
         const range = editor.getSelection(true);
-        console.log("range >> ", range);
         try {
           const result = await axios.post(
-            "http://localhost:4000/api/upload",
+            `${process.env.REACT_APP_CLIENT_HOST}/api/upload`,
             formData
           );
           const IMG_URL = result.data.url;

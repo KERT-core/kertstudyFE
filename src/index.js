@@ -16,7 +16,13 @@ const sagaMiddleware = createSagaMiddleware();
 
 const store = createStore(
   rootReducer,
-  composeWithDevTools(applyMiddleware(logger, sagaMiddleware))
+  composeWithDevTools(
+    // logger는 development환경에서만 실행되게 해야 한다.
+    process.env.NODE_ENV === "development"
+      ? applyMiddleware(logger, sagaMiddleware)
+      : applyMiddleware(sagaMiddleware)
+    // applyMiddleware(logger, sagaMiddleware)
+  )
 );
 
 function loadUser() {

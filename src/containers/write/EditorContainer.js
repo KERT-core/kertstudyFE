@@ -5,7 +5,7 @@ import { changeField, initialize } from "../../modules/write";
 
 const EditorContainer = () => {
   const dispatch = useDispatch();
-  const { title, body, capacity } = useSelector(
+  let { title, body, capacity } = useSelector(
     ({ write: { title, body, capacity } }) => ({
       title,
       body,
@@ -20,6 +20,7 @@ const EditorContainer = () => {
 
   // 만약에 화면에서 언마운트 된다면 이를 초기화 해줘야 한다.
   useEffect(() => {
+    dispatch(changeField({ key: "capacity", value: "2" }));
     return () => {
       dispatch(initialize());
     };

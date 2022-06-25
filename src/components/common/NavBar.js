@@ -93,52 +93,40 @@ const NavBar = ({ navItemList, isLoggedIn, onLogout, user }) => {
         {navItemList.map((item) => {
           if (item === "HomePage") {
             return (
-              <Wrapper>
-                <Link key={item} to="/">
-                  홈
-                </Link>
+              <Wrapper key={item}>
+                <Link to="/">홈</Link>
               </Wrapper>
             );
           } else if (isLoggedIn && item === "MyPost") {
             return (
-              <Wrapper>
-                <Link
-                  key={item}
-                  to={`/?username=${user?.username}`}
-                >
+              <Wrapper key={item}>
+                <Link to={`/?username=${user?.username}`}>
                   내 스터디 확인하기
                 </Link>
               </Wrapper>
             );
           } else if (isLoggedIn && item === "EditProfile") {
             return (
-              <Wrapper>
-                <Link key={item} to="/profile">
-                  프로필 수정
-                </Link>
+              <Wrapper key={item}>
+                <Link to="/profile">프로필 수정</Link>
               </Wrapper>
             );
           } else if (!isLoggedIn && item === "Login") {
             return (
-              <Wrapper>
-                <Link key={item} to="/login">
-                  로그인
-                </Link>
+              <Wrapper key={item}>
+                <Link to="/login">로그인</Link>
               </Wrapper>
             );
           } else if (!isLoggedIn && item === "Register") {
             return (
-              <Wrapper>
-                <Link key={item} to="/register">
-                  회원가입
-                </Link>
+              <Wrapper key={item}>
+                <Link to="/register">회원가입</Link>
               </Wrapper>
             );
           } else if (isLoggedIn && item === "Logout") {
             return (
-              <Wrapper>
+              <Wrapper key={item}>
                 <a
-                  key={item}
                   onClick={onLogout}
                   style={{ cursor: "pointer" }}
                 >

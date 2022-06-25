@@ -17,3 +17,6 @@ export const logout = () => client.post("/api/auth/logout");
 // 회원정보 수정
 export const editProfile = ({ _id, email, username }) =>
   client.patch(`/api/auth/${_id}`, { email, username });
+
+export const check_like_user = (userInfo) =>
+  client.post(`/api/auth/like_user`, userInfo);

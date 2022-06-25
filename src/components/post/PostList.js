@@ -12,6 +12,9 @@ import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
 import StarIcon from "@mui/icons-material/Star";
 
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+
 const PostListBlock = styled(Responsive)`
   margin: 90px 50px;
   padding-bottom: 80px;
@@ -293,6 +296,17 @@ const PostList = ({
         )}
       </WritePostButtonWrapper>
       {/* not loading && exits posts array */}
+      {(loading || !posts) && (
+        <Backdrop
+          sx={{
+            color: "#fff",
+            zIndex: (theme) => theme.zIndex.drawer + 1,
+          }}
+          open={loading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      )}
       {!loading && posts && (
         <PostGridLayout>
           {posts.map((post) => (

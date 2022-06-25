@@ -17,7 +17,7 @@ const Fullscreen = styled.div`
 `;
 
 const AskModalBlock = styled.div`
-  width: 320px;
+  width: 450px;
   background: white;
   padding: 1.5rem;
   border-radius: 4px;
@@ -49,10 +49,11 @@ const AskModal = ({
   visible,
   title,
   description,
-  onCancel,
+  onCancel = () => {},
   cancelContext = "취소",
   onConfirm,
   confirmText = "확인",
+  checker = false,
 }) => {
   if (!visible) return null;
   return (
@@ -61,9 +62,11 @@ const AskModal = ({
         <h2>{title}</h2>
         <p>{description}</p>
         <div className="buttons">
-          <StyledButton onClick={onCancel}>
-            {cancelContext}
-          </StyledButton>
+          {!checker && (
+            <StyledButton onClick={onCancel}>
+              {cancelContext}
+            </StyledButton>
+          )}
           <StyledButton cyan onClick={onConfirm}>
             {confirmText}
           </StyledButton>
